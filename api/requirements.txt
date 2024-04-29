@@ -1,0 +1,11 @@
+# web
+Django==5.0.3
+openvino==2024.0.0
+redis==5.0.3
+SQLAlchemy==2.0.28
+
+# core
+mutagen==1.47.0
+musdb==0.4.2
+museval==0.4.1
+spleeter==2.4.0

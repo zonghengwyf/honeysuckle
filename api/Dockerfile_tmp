@@ -1,0 +1,25 @@
+FROM python:3.10
+
+RUN mkdir -p /opt/honeysuckle /opt/honeysuckle/media /opt/honeysuckle/static
+
+WORKDIR /opt/honeysuckle
+
+ADD . /opt/honeysuckle
+
+#RUN cp /etc/apt/sources.list /etc/apt/sources.list.backup
+#
+#RUN echo "deb http://mirrors.aliyun.com/debian/ bullseye main contrib non-free" > /etc/apt/sources.list
+#RUN echo "deb-src http://mirrors.aliyun.com/debian/ bullseye main contrib non-free" >> /etc/apt/sources.list
+#
+#RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg libasound2-dev libsndfile-dev
+#
+#RUN pip install --upgrade pip wheel && pip install uwsgi -i https://pypi.tuna.tsinghua.edu.cn/simple --default-timeout=200 \
+#    && pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple --default-timeout=200 \
+#    && rm requirements.txt
+
+RUN ls
+
+RUN chmod +x start.sh
+
+CMD ["sh", "/opt/honeysuckle/api/start.sh"]
+
