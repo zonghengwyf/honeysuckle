@@ -1,17 +1,13 @@
 FROM node:16-bullseye
 
-RUN mkdir -p /webapp/frontend/assets
-WORKDIR /webapp/frontend
+ARG BASE_DIR=/opt/honeysuckle/frontend
 
-# Install Node dependencies
-COPY package.json /webapp/frontend/
-COPY package-lock.json /webapp/frontend/
-RUN npm install
+RUN mkdir -p ${BASE_DIR}
+WORKDIR ${BASE_DIR}
 
 COPY . .
 
-# Copy over entrypoint script
-COPY frontend-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/frontend-entrypoint.sh
-RUN ln -s /usr/local/bin/frontend-entrypoint.sh /
-ENTRYPOINT ["frontend-entrypoint.sh"]
+RUN npm --registry https://registry.npm.taobao.org install
+RUN npm run build
+
+COPY ./build/dist /usr/share/nginx/html
