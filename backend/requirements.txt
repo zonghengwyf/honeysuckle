@@ -1,0 +1,11 @@
+# web
+fastapi
+wtforms
+SQLAlchemy
+# jinjia2
+
+# core
+mutagen
+musdb
+museval
+spleeter
