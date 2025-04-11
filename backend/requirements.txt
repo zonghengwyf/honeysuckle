@@ -1,11 +1,20 @@
 # web
-fastapi
-wtforms
-SQLAlchemy
+cryptography==44.0.0
+fastapi==0.115.6
+wtforms==3.1.2
+SQLAlchemy==2.0.36
 # jinjia2
+# celery==5.1.2
+redis==5.2.1
+pymysql==1.1.1
+python_multipart==0.0.20
+passlib==1.7.4
+aiofiles==24.1.0
 
 # core
-mutagen
-musdb
-museval
-spleeter
+mutagen==1.47.0
+musdb==0.4.2
+museval==0.4.1
+spleeter==2.4.0
+nnabla==1.39.0
+pydub==0.25.1

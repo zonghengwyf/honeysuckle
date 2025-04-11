@@ -16,8 +16,9 @@ WORKDIR ${basedir}/backend
 RUN sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list && \
   sed -i 's/security.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
 
-RUN apt-get update && apt-get install -y --no-install-recommends build-essential python3-distutils vim wget ffmpeg libsndfile1 libasound2-dev libsndfile-dev libhdf5-dev
+RUN apt-get update && apt-get install -y --no-install-recommends build-essential python3-distutils vim iputils-ping telnet wget ffmpeg libsndfile1 libasound2-dev libsndfile-dev libhdf5-dev
 
+RUN pip install celery==5.1.2 -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 RUN pip install --upgrade pip wheel setuptools -i https://pypi.tuna.tsinghua.edu.cn/simple && \
     pip install numpy -i https://pypi.tuna.tsinghua.edu.cn/simple && \
@@ -29,7 +30,7 @@ RUN mkdir -p ${model_path}/2stems ${model_path}/4stems ${model_path}/5stems
 
 #COPY 2stems.tar.gz /tmp/2stems.tar.gz
 RUN wget -O /tmp/2stems.tar.gz https://github.com/deezer/spleeter/releases/download/v1.4.0/2stems.tar.gz && \
-    tar -xvzf /tmp/2stems.tar.gz -C ${model_path}/2stems/&& \
+    tar -xvzf /tmp/2stems.tar.gz -C ${model_path}/2stems/ && \
     touch ${model_path}/2stems/.probe
 
 #COPY 4stems.tar.gz /tmp/4stems.tar.gz
@@ -40,7 +41,7 @@ RUN wget -O /tmp/4stems.tar.gz https://github.com/deezer/spleeter/releases/downl
 #COPY 5stems.tar.gz /tmp/5stems.tar.gz
 RUN  wget -O /tmp/5stems.tar.gz https://github.com/deezer/spleeter/releases/download/v1.4.0/5stems.tar.gz && \
     tar -xvzf /tmp/5stems.tar.gz -C ${model_path}/5stems/ && \
-    touch ${model_path}l/5stems/.probe
+    touch ${model_path}/5stems/.probe
 
 RUN apt-get remove --purge -y build-essential && \
     apt-get autoremove -y && \

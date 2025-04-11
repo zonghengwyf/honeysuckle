@@ -1,0 +1,3 @@
+CPU_SEPARATION=1
+PROJECT_DIR=/opt/honeysuckle
+DATA_DIR=/var/data

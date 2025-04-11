@@ -13,6 +13,7 @@
               </h3>
             </nuxt-link>
             <v-spacer></v-spacer>
+            <!--
             <v-btn
               color="primary"
               class="my-5"
@@ -22,6 +23,7 @@
               登录
             </v-btn>
             <v-btn @click="themeDark = !themeDark">切换主题</v-btn>
+            -->
           </v-col>
         </v-row>
       </v-container>

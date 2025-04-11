@@ -8,7 +8,7 @@ export default defineNuxtConfig({
   app: {
     head: {
       titleTemplate: '%s',
-      title: '金银花-音轨分离',
+      title: '金银花',
       htmlAttrs: {
         lang: 'zh',
       },
@@ -35,8 +35,8 @@ export default defineNuxtConfig({
     '~/plugins/pinia.ts',
     '~/plugins/auth.ts',
     '~/plugins/http.ts',
-    { src: '~/plugins/vue-glow', mode: 'client' },
-    { src: '~/plugins/chart', mode: 'client' },
+    // { src: '~/plugins/vue-glow', mode: 'client' },
+    // { src: '~/plugins/chart', mode: 'client' },
   ],
 
   // Auto import components
@@ -72,6 +72,10 @@ export default defineNuxtConfig({
   },
 
   // Sitemap configuration
+  site: {
+      url: 'http://www.aiznbs.com',
+    },
+
   sitemap: {
     hostname: 'http://www.aiznbs.com',
     gzip: true,
@@ -115,4 +119,6 @@ export default defineNuxtConfig({
     host: '0.0.0.0',
     port: 3000,
   },
+
+  compatibilityDate: '2025-03-10',
 });

@@ -28,10 +28,11 @@
               color="primary"
               large
               class="mt-4 mb-4"
-              v-auth="uploadAudioFile"
+              @click="uploadAudioFile"
             >
+              <!--v-auth="uploadAudioFile"-->
               <v-icon v-if="isLgAndUp" left>
-                {{ mdiSend }}
+                 mdi-send
               </v-icon>
               上传文件
             </v-btn>
@@ -42,7 +43,7 @@
               href="#"
             >
               <v-icon v-if="isLgAndUp" left color="#ffe500">
-                {{ mdiCreation }}
+                mdi-creation
               </v-icon>
               查看示例
             </v-btn>
@@ -110,7 +111,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { mdiSend as mdiSendIcon, mdiCreation as mdiCreationIcon } from '@mdi/js'; // 重命名导入
 
 import { useUserStore } from '@/stores/index';
 import { useBreakpoint } from '@/composables/useBreakpoint';
@@ -118,16 +118,13 @@ import voice_2_stems from '@/assets/img/voice-2-stems.svg';
 import voice_4_stems from '@/assets/img/voice-4-stems.svg';
 import voice_5_stems from '@/assets/img/voice-5-stems.svg';
 
-// 直接使用导入的图标
-const mdiSend = mdiSendIcon;
-const mdiCreation = mdiCreationIcon;
 // 使用 Vuetify 的响应式显示
 const { isLgAndUp, isMdAndDown, isMdAndUp, isSmAndDown, isMdOnly } = useBreakpoint();
 const userStore = useUserStore();
 const router = useRouter();
 
 const uploadAudioFile = async () => {
-    router.push('/audio/separate');
+    router.push('/audio/separator');
 };
 
 // 指定布局

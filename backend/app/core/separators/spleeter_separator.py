@@ -1,3 +1,4 @@
+import os.path
 from pathlib import Path
 
 import numpy as np
@@ -5,18 +6,16 @@ from spleeter import *
 from spleeter.audio.adapter import AudioAdapter
 from spleeter.separator import Separator
 from spleeter.utils import *
-from spleeter.audio import STFTBackend
-from api.models import OutputFormat
 
-from api.util import output_format_to_ext, is_output_format_lossy
+from config import APP_DIR, AudioOutputFormat, SeparatorModel
+from app.utils.util import output_format_to_ext, is_output_format_lossy
 
-"""
-This module defines a wrapper interface over the Spleeter API.
-"""
+from app.core.log import logger
 
 class SpleeterSeparator:
     """Performs source separation using Spleeter API."""
-    def __init__(self, cpu_separation: bool, output_format=OutputFormat.MP3_256.value, with_piano: bool = False):
+    def __init__(self, cpu_separation: bool, output_format=AudioOutputFormat.MP3_256, with_piano: bool = False,
+                 spleeter_stem=None):
         """Default constructor.
         :param config: Separator config, defaults to None
         """
@@ -24,16 +23,18 @@ class SpleeterSeparator:
             output_format) else None
         self.audio_format = output_format_to_ext(output_format)
         self.sample_rate = 44100
-        self.spleeter_stem = 'config/5stems-16kHz.json' if with_piano else 'config/4stems-16kHz.json'
-        self.separator = Separator(self.spleeter_stem,
-                                   stft_backend=STFTBackend.LIBROSA if cpu_separation else STFTBackend.TENSORFLOW,
-                                   multiprocess=False)
+        if not spleeter_stem:
+            self.spleeter_stem = 'data/separators/5stems-16kHz.json' if with_piano else 'data/separators/4stems-16kHz.json'
+            self.spleeter_stem = os.path.join(APP_DIR, self.spleeter_stem)
+        else:
+            self.spleeter_stem = spleeter_stem
+        self.separator = Separator(self.spleeter_stem, multiprocess=False)
         self.audio_adapter = AudioAdapter.default()
 
     def check_and_remove_empty_model_dirs(self):
         model_paths = [
-            Path('pretrained_models', '4stems'),
-            Path('pretrained_models', '5stems')
+            Path(SeparatorModel.model_path, '4stems'),
+            Path(SeparatorModel.model_path, '5stems')
         ]
         for model_path in model_paths:
             if model_path.exists() and not any(model_path.iterdir()):

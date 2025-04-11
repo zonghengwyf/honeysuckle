@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from .separate.views import separate_router
+from .separator.views import separator_router
 
 audio_router = APIRouter()
-audio_router.include_router(separate_router, prefix="/separate")
+audio_router.include_router(separator_router, prefix="/separator")

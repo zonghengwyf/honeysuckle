@@ -1,23 +1,25 @@
-version: "3.0"
 
 services:
-#  mysql:
-#    image: honeysuckle_mysql
-#    volumes:
-#      - /var/lib/mysql:/var/lib/mysql
-#      - ./deploy/mysql/my.cnf:/etc/mysql/my.cnf
-#    ports:
-#      - "3006:3006"
-#    restart: always
+  mysql:
+    build: ./deploy/mysql
+    image: honeysuckle-mysql:latest
+    volumes:
+      - /var/lib/mysql:/var/lib/mysql
+      - ./deploy/mysql/my.cnf:/etc/mysql/my.cnf
+    ports:
+      - "3006:3306"
+    restart: always
 
-#  redis:
-#    build: ./deplay/redis
-#    volumes:
-#      - /var/lib/redis:/var/run/redus
-#      - ./deplay/redis/redis.conf:/etc/redis/redis.conf
-#    ports:
-#      - "6379:6379"
-#    restart: always
+  redis:
+    build: ./deploy/redis
+    image: honeysuckle-redis:latest
+    volumes:
+      - /var/lib/redis:/var/run/redis
+      - ./deploy/redis/redis.conf:/etc/redis/redis.conf
+    ports:
+      - "6379:6379"
+    restart: always
+
   frontend:
     build:
       context: ./frontend
@@ -26,9 +28,8 @@ services:
         APP_ENV: production  # development or production
     image: honeysuckle-frontend:latest
     volumes:
-      - ./frontend/dist:/opt/honeysuckle/frontend/dist
-      - ./frontend/components:/opt/honeysuckle/frontend/components
-      - ./frontend/pages:/opt/honeysuckle/frontend/pages
+      - ./frontend/src:/opt/honeysuckle/frontend/src
+      - /var/www:/var/www
     stdin_open: true
     tty: true
     privileged: true
@@ -40,20 +41,38 @@ services:
       args:
         APP_ENV: production  # development or production
     image: honeysuckle-backend:latest
+    env_file: ./backend/env
     volumes:
       - uwsgi_socket:/var/run/honeysuckle
       - ./backend:/opt/honeysuckle/backend
       - /var/logs:/var/logs
-##      - mysql
-#      - redis
-#    links:
-##      - mysql
-#      - redis
-#    depends_on:
-#      - frontend
+      - /var/data:/var/data
     ports:
       - "5000:5000"
+    depends_on:
+      - mysql
+      - redis
     restart: always
+
+  celery:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      args:
+        APP_ENV: production  # development or production
+    image: honeysuckle-celery:latest
+    env_file: ./backend/env
+    command: celery -A app.celery_worker.celery_app worker --loglevel=info
+    volumes:
+      - uwsgi_socket:/var/run/honeysuckle
+      - ./backend:/opt/honeysuckle/backend
+      - /var/logs:/var/logs
+      - /var/data:/var/data
+    depends_on:
+      - mysql
+      - redis
+      - backend
+
 
   nginx:
     build:
@@ -68,6 +87,7 @@ services:
       - ./deploy/nginx/conf.d:/etc/nginx/conf.d
       - ./deploy/nginx/nginx.conf:/etc/nginx/nginx.conf
       - /var/log/nginx:/var/log/nginx
+      - /var/www:/var/www
     ports:
       - "80:80"
 #      - "443:443"
